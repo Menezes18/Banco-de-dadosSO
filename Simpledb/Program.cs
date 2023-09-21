@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
-class Program
+
 class Simpledb
 {
-    private Dictionary<string, string> database;
+    private Dictionary<string, string> database; //depois trocar para object o string 
     private string dataPath;
 
     //estrutura esqueleto do projeto
-    static void Main(string[] args)
+    
     public Simpledb(string dataPath)
     {
         this.dataPath = dataPath;
@@ -101,13 +102,13 @@ class Program
             Console.Write("$ simpledb-client> ");
             string input = Console.ReadLine();
 
-            string command = Console.ReadLine();
+
             string[] parts = input.Split(' ');
             string command = parts[0].ToLower();
 
             switch (command)
             {
-                case "insert":
+                case "--insert":
 
                     if (parts.Length != 2)
                     {
@@ -129,7 +130,7 @@ class Program
                     }
                     break;
 
-                case "update":
+                case "--update":
                     if (parts.Length != 2)
                     {
                         Console.WriteLine("Incorrect usage. Use: update key, value");
@@ -151,34 +152,24 @@ class Program
                    
                     break;
 
-                case "remove":
-                      if (parts.Length != 2)
+                case "--remove":
+                    if (parts.Length != 2)
                     {
-                        Console.WriteLine("Incorrect usage. Use: insert key, value");
+                        Console.WriteLine("Incorrect usage. Use: remove key");
                     }
                     else
                     {
-                        string[] keyValue = parts[1].Split(',');
-                        if (keyValue.Length != 2)
-                        {
-                            Console.WriteLine("Incorrect usage. Use: insert key, value");
-                        }
-                        else
-                        {
-                            string key = keyValue[0];
-                            string value = keyValue[1];
-                            Database.Insert(key, value);
-                        }
+                        string key = parts[1];
+                        Database.Remove(key);
                     }
-
                     break;
 
-                case "search":
+                case "--search":
 
                    
                     break;
 
-                case "quit":
+                case "--quit":
                     Environment.Exit(0);
                     break;
 
