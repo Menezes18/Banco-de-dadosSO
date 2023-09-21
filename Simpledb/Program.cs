@@ -43,6 +43,20 @@ class Simpledb
         }
     }
 
+      public void Remove(string key)
+    {
+        if (database.ContainsKey(key))
+        {
+            database.Remove(key);
+            SaveData();
+            Console.WriteLine("removed");
+        }
+        else
+        {
+            Console.WriteLine("Key not found.");
+        }
+    }
+
     private void LoadData()
     {
         database = new Dictionary<string, string>();
@@ -138,6 +152,24 @@ class Program
                     break;
 
                 case "remove":
+                      if (parts.Length != 2)
+                    {
+                        Console.WriteLine("Incorrect usage. Use: insert key, value");
+                    }
+                    else
+                    {
+                        string[] keyValue = parts[1].Split(',');
+                        if (keyValue.Length != 2)
+                        {
+                            Console.WriteLine("Incorrect usage. Use: insert key, value");
+                        }
+                        else
+                        {
+                            string key = keyValue[0];
+                            string value = keyValue[1];
+                            Database.Insert(key, value);
+                        }
+                    }
 
                     break;
 
