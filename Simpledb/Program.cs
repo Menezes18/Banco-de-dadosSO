@@ -29,7 +29,7 @@ class Simpledb
         }
     }
 
-    public void Update(string key, string value)
+     public void Update(string key, string value)
     {
         if (database.ContainsKey(key))
         {
@@ -147,12 +147,13 @@ class Program
                     break;
 
                 case "quit":
-                Environment.Exit(0);
+                    Environment.Exit(0);
                     break;
 
                 default:
                     Console.WriteLine("Invalid command. Try again");
                     break;
+
             }
         }
     }
