@@ -1,10 +1,11 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 
 class Simpledb
 {
-    private Dictionary<string, string> database; //depois trocar para object o string 
+    private Dictionary<string, string> database;
     private string dataPath;
 
     public Simpledb(string dataPath)
@@ -99,12 +100,11 @@ class Simpledb
     }
 }
 
-//estrutura esqueleto do projeto
 class Program
 {
     static void Main(string[] args)
     {
-        string dataNamePath = "keyvalue.db";
+        string dataNamePath = "dataBase.db";-
         Simpledb Database = new Simpledb(dataNamePath);
         
 
@@ -118,7 +118,7 @@ class Program
 
             switch (command)
             {
-                case "insert":
+                case "--insert":
                     if (parts.Length != 2)
                     {
                         Console.WriteLine("Incorrect usage. Use: insert key, value");
@@ -139,7 +139,7 @@ class Program
                     }
                     break;
 
-                case "update":
+                case "--update":
                     if (parts.Length != 2)
                     {
                         Console.WriteLine("Incorrect usage. Use: update key, value");
@@ -160,7 +160,7 @@ class Program
                     }
                     break;
 
-                case "remove":
+                case "--remove":
                     if (parts.Length != 2)
                     {
                         Console.WriteLine("Incorrect usage. Use: remove key");
@@ -172,7 +172,7 @@ class Program
                     }
                     break;
 
-                case "search":
+                case "--search":
                     if (parts.Length != 2)
                     {
                         Console.WriteLine("Incorrect usage. Use: search key");
@@ -188,7 +188,7 @@ class Program
                     }
                     break;
 
-                case "quit":
+                case "--quit":
                     Environment.Exit(0);
                     break;
 
