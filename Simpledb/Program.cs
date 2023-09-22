@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
-class Program
 class Simpledb
 {
-    private Dictionary<string, string> database;
+    private Dictionary<string, string> database; //depois trocar para object o string 
     private string dataPath;
 
-    //estrutura esqueleto do projeto
-    static void Main(string[] args)
     public Simpledb(string dataPath)
     {
         this.dataPath = dataPath;
@@ -29,7 +27,7 @@ class Simpledb
         }
     }
 
-     public void Update(string key, string value)
+    public void Update(string key, string value)
     {
         if (database.ContainsKey(key))
         {
@@ -43,7 +41,7 @@ class Simpledb
         }
     }
 
-      public void Remove(string key)
+    public void Remove(string key)
     {
         if (database.ContainsKey(key))
         {
@@ -54,6 +52,19 @@ class Simpledb
         else
         {
             Console.WriteLine("Key not found.");
+        }
+    }
+
+    public string Search(string key)
+    {
+        if (database.ContainsKey(key))
+        {
+            return database[key];
+        }
+        else
+        {
+            Console.WriteLine("Not found");
+            return null;
         }
     }
 
@@ -88,27 +99,26 @@ class Simpledb
     }
 }
 
+//estrutura esqueleto do projeto
 class Program
 {
     static void Main(string[] args)
     {
-        string dataNamePath = "DataBase.db";
+        string dataNamePath = "keyvalue.db";
         Simpledb Database = new Simpledb(dataNamePath);
-
+        
 
         while (true)
         {
             Console.Write("$ simpledb-client> ");
             string input = Console.ReadLine();
 
-            string command = Console.ReadLine();
             string[] parts = input.Split(' ');
             string command = parts[0].ToLower();
 
             switch (command)
             {
                 case "insert":
-
                     if (parts.Length != 2)
                     {
                         Console.WriteLine("Incorrect usage. Use: insert key, value");
@@ -148,34 +158,34 @@ class Program
                             Database.Update(key, value);
                         }
                     }
-                   
                     break;
 
                 case "remove":
-                      if (parts.Length != 2)
+                    if (parts.Length != 2)
                     {
-                        Console.WriteLine("Incorrect usage. Use: insert key, value");
+                        Console.WriteLine("Incorrect usage. Use: remove key");
                     }
                     else
                     {
-                        string[] keyValue = parts[1].Split(',');
-                        if (keyValue.Length != 2)
-                        {
-                            Console.WriteLine("Incorrect usage. Use: insert key, value");
-                        }
-                        else
-                        {
-                            string key = keyValue[0];
-                            string value = keyValue[1];
-                            Database.Insert(key, value);
-                        }
+                        string key = parts[1];
+                        Database.Remove(key);
                     }
-
                     break;
 
                 case "search":
-
-                   
+                    if (parts.Length != 2)
+                    {
+                        Console.WriteLine("Incorrect usage. Use: search key");
+                    }
+                    else
+                    {
+                        string key = parts[1];
+                        var result = Database.Search(key);
+                        if (result != null)
+                        {
+                            Console.WriteLine(result);
+                        }
+                    }
                     break;
 
                 case "quit":
@@ -185,7 +195,6 @@ class Program
                 default:
                     Console.WriteLine("Invalid command. Try again");
                     break;
-
             }
         }
     }
