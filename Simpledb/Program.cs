@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -104,98 +103,73 @@ class Program
 {
     static void Main(string[] args)
     {
-        string dataNamePath = "dataBase.db";-
+        string dataNamePath = "keyvalue.db";
         Simpledb Database = new Simpledb(dataNamePath);
-        
 
-        while (true)
+       if(args.Length == 0) return;
+
+        string command = args[0];  
+        string[] input = args[1].Split(',');
+        string key = input.Length > 0 ? input[0] : null;
+        string value = input.Length > 1 ? input[1] : null;
+
+
+
+        switch (command)
         {
-            Console.Write("$ simpledb-client> ");
-            string input = Console.ReadLine();
+            case "--insert":
 
-            string[] parts = input.Split(' ');
-            string command = parts[0].ToLower();
+                if (key != null && value != null)
+                {
+                    Database.Insert(key, value);
+                }
+                else
+                {
+                    Console.WriteLine("Usage: --insert key,value");
+                }
+                break;
 
-            switch (command)
-            {
-                case "--insert":
-                    if (parts.Length != 2)
-                    {
-                        Console.WriteLine("Incorrect usage. Use: insert key, value");
-                    }
-                    else
-                    {
-                        string[] keyValue = parts[1].Split(',');
-                        if (keyValue.Length != 2)
-                        {
-                            Console.WriteLine("Incorrect usage. Use: insert key, value");
-                        }
-                        else
-                        {
-                            string key = keyValue[0];
-                            string value = keyValue[1];
-                            Database.Insert(key, value);
-                        }
-                    }
-                    break;
+            case "--update":
+                if (key != null && value != null)
+                {
+                    Database.Update(key, value);
+                }
+                else
+                {
+                    Console.WriteLine("Usage: --update key,value");
+                }
+                break;
 
-                case "--update":
-                    if (parts.Length != 2)
-                    {
-                        Console.WriteLine("Incorrect usage. Use: update key, value");
-                    }
-                    else
-                    {
-                        string[] keyValue = parts[1].Split(',');
-                        if (keyValue.Length != 2)
-                        {
-                            Console.WriteLine("Incorrect usage. Use: update key, value");
-                        }
-                        else
-                        {
-                            string key = keyValue[0];
-                            string value = keyValue[1];
-                            Database.Update(key, value);
-                        }
-                    }
-                    break;
+            case "--remove":
+                if (key != null)
+                {
+                    Database.Remove(key);
+                }
+                else
+                {
+                    Console.WriteLine("Usage: --remove key");
+                }
+                break;
 
-                case "--remove":
-                    if (parts.Length != 2)
+            case "--search":
+                if (key != null)
+                {
+                    var result = Database.Search(key);
+                    if (result != null)
                     {
-                        Console.WriteLine("Incorrect usage. Use: remove key");
+                        Console.WriteLine(result);
                     }
-                    else
-                    {
-                        string key = parts[1];
-                        Database.Remove(key);
-                    }
-                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Usage: --search key");
+                }
+                break;
 
-                case "--search":
-                    if (parts.Length != 2)
-                    {
-                        Console.WriteLine("Incorrect usage. Use: search key");
-                    }
-                    else
-                    {
-                        string key = parts[1];
-                        var result = Database.Search(key);
-                        if (result != null)
-                        {
-                            Console.WriteLine(result);
-                        }
-                    }
-                    break;
-
-                case "--quit":
-                    Environment.Exit(0);
-                    break;
-
-                default:
-                    Console.WriteLine("Invalid command. Try again");
-                    break;
-            }
+            default:
+                Console.WriteLine("Invalid command. Try again");
+                break;
         }
     }
 }
+
