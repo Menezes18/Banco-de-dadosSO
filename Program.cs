@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 
+// Classe que representa um banco de dados simples chave-valor.
 class Simpledb
 {
-    private Dictionary<string, string> database;
-    private string dataPath;
+    private Dictionary<string, string> database; // Um dicionário para armazenar os pares chave-valor.
+    private string dataPath; // Caminho para o arquivo de dados.
 
+    // Construtor da classe.
     public Simpledb(string dataPath)
     {
         this.dataPath = dataPath;
-        LoadData();
+        LoadData(); // Carrega os dados do arquivo.
     }
 
+    // Método para inserir um novo par chave-valor no banco de dados.
     public void Insert(string key, string value)
     {
         if (!database.ContainsKey(key))
         {
             database[key] = value;
-            SaveData();
+            SaveData(); // Salva os dados no arquivo.
             Console.WriteLine("inserted");
         }
         else
@@ -27,12 +30,13 @@ class Simpledb
         }
     }
 
+    // Método para atualizar um valor existente no banco de dados.
     public void Update(string key, string value)
     {
         if (database.ContainsKey(key))
         {
             database[key] = value;
-            SaveData();
+            SaveData(); // Salva os dados no arquivo.
             Console.WriteLine("updated");
         }
         else
@@ -41,12 +45,13 @@ class Simpledb
         }
     }
 
+    // Método para remover um par chave-valor do banco de dados.
     public void Remove(string key)
     {
         if (database.ContainsKey(key))
         {
             database.Remove(key);
-            SaveData();
+            SaveData(); // Salva os dados no arquivo.
             Console.WriteLine("removed");
         }
         else
@@ -55,6 +60,7 @@ class Simpledb
         }
     }
 
+    // Método para procurar um valor no banco de dados com base na chave.
     public string Search(string key)
     {
         if (database.ContainsKey(key))
@@ -68,6 +74,7 @@ class Simpledb
         }
     }
 
+    // Método privado para carregar os dados do arquivo para o dicionário.
     private void LoadData()
     {
         database = new Dictionary<string, string>();
@@ -88,6 +95,7 @@ class Simpledb
         }
     }
 
+    // Método privado para salvar os dados do dicionário no arquivo.
     private void SaveData()
     {
         List<string> lines = new List<string>();
@@ -99,77 +107,107 @@ class Simpledb
     }
 }
 
+// Classe principal do programa.
 class Program
 {
     static void Main(string[] args)
     {
-        string dataNamePath = "keyvalue.db";
+        string dataNamePath = "DataBase.db";
         Simpledb Database = new Simpledb(dataNamePath);
-
-       if(args.Length == 0) return;
-
-        string command = args[0];  
-        string[] input = args[1].Split(',');
-        string key = input.Length > 0 ? input[0] : null;
-        string value = input.Length > 1 ? input[1] : null;
-
-
-
-        switch (command)
+        
+        while (true)
         {
-            case "--insert":
+            Console.Write("$ simpledb-client> ");
+            string input = Console.ReadLine();
 
-                if (key != null && value != null)
-                {
-                    Database.Insert(key, value);
-                }
-                else
-                {
-                    Console.WriteLine("Usage: --insert key,value");
-                }
-                break;
+            string[] parts = input.Split(' ');
+            string command = parts[0].ToLower();
 
-            case "--update":
-                if (key != null && value != null)
-                {
-                    Database.Update(key, value);
-                }
-                else
-                {
-                    Console.WriteLine("Usage: --update key,value");
-                }
-                break;
-
-            case "--remove":
-                if (key != null)
-                {
-                    Database.Remove(key);
-                }
-                else
-                {
-                    Console.WriteLine("Usage: --remove key");
-                }
-                break;
-
-            case "--search":
-                if (key != null)
-                {
-                    var result = Database.Search(key);
-                    if (result != null)
+            switch (command)
+            {
+                case "--insert":
+                    // Comando para inserir um novo par chave-valor no banco de dados.
+                    if (parts.Length != 2)
                     {
-                        Console.WriteLine(result);
+                        Console.WriteLine("Incorrect usage. Use: insert key, value");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Usage: --search key");
-                }
-                break;
+                    else
+                    {
+                        string[] keyValue = parts[1].Split(',');
+                        if (keyValue.Length != 2)
+                        {
+                            Console.WriteLine("Incorrect usage. Use: insert key, value");
+                        }
+                        else
+                        {
+                            string key = keyValue[0];
+                            string value = keyValue[1];
+                            Database.Insert(key, value);
+                        }
+                    }
+                    break;
 
-            default:
-                Console.WriteLine("Invalid command. Try again");
-                break;
+                case "--update":
+                    // Comando para atualizar um valor existente no banco de dados.
+                    if (parts.Length != 2)
+                    {
+                        Console.WriteLine("Incorrect usage. Use: update key, value");
+                    }
+                    else
+                    {
+                        string[] keyValue = parts[1].Split(',');
+                        if (keyValue.Length != 2)
+                        {
+                            Console.WriteLine("Incorrect usage. Use: update key, value");
+                        }
+                        else
+                        {
+                            string key = keyValue[0];
+                            string value = keyValue[1];
+                            Database.Update(key, value);
+                        }
+                    }
+                    break;
+
+                case "--remove":
+                    // Comando para remover um par chave-valor do banco de dados.
+                    if (parts.Length != 2)
+                    {
+                        Console.WriteLine("Incorrect usage. Use: remove key");
+                    }
+                    else
+                    {
+                        string key = parts[1];
+                        Database.Remove(key);
+                    }
+                    break;
+
+                case "--search":
+                    // Comando para procurar um valor no banco de dados com base na chave.
+                    if (parts.Length != 2)
+                    {
+                        Console.WriteLine("Incorrect usage. Use: search key");
+                    }
+                    else
+                    {
+                        string key = parts[1];
+                        var result = Database.Search(key);
+                        if (result != null)
+                        {
+                            Console.WriteLine(result);
+                        }
+                    }
+                    break;
+
+                case "--quit":
+                    // Comando para sair do programa.
+                    Environment.Exit(0);
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid command. Try again");
+                    break;
+            }
         }
     }
 }
-
