@@ -1,6 +1,0 @@
-C:\Users\Usuario\Desktop\TrabalhoSO\Banco-de-dadosSO\Banco-de-dadosSO\Banco-de-dadosSO\Simpledb\bin\Debug\ConsoleApplication1.exe
-C:\Users\Usuario\Desktop\TrabalhoSO\Banco-de-dadosSO\Banco-de-dadosSO\Banco-de-dadosSO\Simpledb\bin\Debug\ConsoleApplication1.pdb
-C:\Users\Usuario\Desktop\TrabalhoSO\Banco-de-dadosSO\Banco-de-dadosSO\Banco-de-dadosSO\Simpledb\obj\Debug\SimpleDB.csproj.AssemblyReference.cache
-C:\Users\Usuario\Desktop\TrabalhoSO\Banco-de-dadosSO\Banco-de-dadosSO\Banco-de-dadosSO\Simpledb\obj\Debug\SimpleDB.csproj.CoreCompileInputs.cache
-C:\Users\Usuario\Desktop\TrabalhoSO\Banco-de-dadosSO\Banco-de-dadosSO\Banco-de-dadosSO\Simpledb\obj\Debug\ConsoleApplication1.exe
-C:\Users\Usuario\Desktop\TrabalhoSO\Banco-de-dadosSO\Banco-de-dadosSO\Banco-de-dadosSO\Simpledb\obj\Debug\ConsoleApplication1.pdb
