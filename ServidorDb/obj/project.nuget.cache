@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "dgSpecHash": "mMCeB+1/o36kxgKDK+8he6N+gw5x35vsz9PO/pyX7YPy1T+r/q0ViSfpoHml99Eu/s2juJFUtNUwkJTQyTSu8A==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\titin\\Desktop\\BancoDeDados Chave-Valor\\Banco-de-dadosSO\\ServidorDb\\ServidorDb.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\titin\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\titin\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\titin\\.nuget\\packages\\msmq.messaging\\1.0.4\\msmq.messaging.1.0.4.nupkg.sha512",
+    "C:\\Users\\titin\\.nuget\\packages\\system.directoryservices\\4.7.0\\system.directoryservices.4.7.0.nupkg.sha512",
+    "C:\\Users\\titin\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\titin\\.nuget\\packages\\system.io.filesystem.accesscontrol\\4.7.0\\system.io.filesystem.accesscontrol.4.7.0.nupkg.sha512",
+    "C:\\Users\\titin\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
+    "C:\\Users\\titin\\.nuget\\packages\\system.security.permissions\\4.7.0\\system.security.permissions.4.7.0.nupkg.sha512",
+    "C:\\Users\\titin\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
+    "C:\\Users\\titin\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}
