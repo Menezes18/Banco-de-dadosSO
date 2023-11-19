@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace simpleDb
 {
@@ -11,71 +12,111 @@ namespace simpleDb
     {
         private Dictionary<string, string> database; // Um dicionário para armazenar os pares chave-valor.
         private string dataPath; // Caminho para o arquivo de dados.
+        private Mutex mutex; // Mutex utilizado para lidar com a exclusão mútua.
 
         // Construtor da classe.
         public Simpledb(string dataPath)
         {
             this.dataPath = dataPath;
+            this.mutex = new Mutex();
             LoadData(); // Carrega os dados do arquivo.
         }
 
         // Método para inserir um novo par chave-valor no banco de dados.
         public string Insert(string key, string value)
         {
-            if (!database.ContainsKey(key))
-            {
-                database[key] = value;
-                SaveData(); // Salva os dados no arquivo.
-                return "inserted";
-            }
-            else
-            {
-                return "Key already exists. Use the Update to modify the object";
-            }
-        }
+            
+            mutex.WaitOne(); // Adquire o mutex para garantir exclusão mútua.
 
-        // Método para atualizar um valor existente no banco de dados.
-        public string Update(string key, string value)
-        {
-            if (database.ContainsKey(key))
+            try
             {
-                database[key] = value;
-                SaveData(); // Salva os dados no arquivo.
-                return "updated";
+                if (!database.ContainsKey(key))
+                {
+                    database[key] = value;
+                    SaveData(); // Salva os dados no arquivo.
+                    return "inserted";
+                }
+                else
+                {
+                    return "Key already exists. Use Update to modify the object";
+                }
             }
-            else
+            finally
             {
-                return "Key not found. Use the Insert to add a new object";
+                mutex.ReleaseMutex(); // Libera o mutex.
+            }   
+        }
+        // Método para atualizar um valor existente no banco de dados.
+         public string Update(string key, string value)
+        {
+           
+            mutex.WaitOne(); // Adquire o mutex para garantir exclusão mútua.
+
+            try
+            {
+                if (database.ContainsKey(key))
+                {
+                    database[key] = value;
+                    SaveData(); // Salva os dados no arquivo.
+                    return "updated";
+                }
+                else
+                {
+                    return "Key not found. Use Insert to add a new object";
+                }
+            }
+            finally
+            {
+                mutex.ReleaseMutex(); // Libera o mutex.              
             }
         }
 
         // Método para remover um par chave-valor do banco de dados.
         public string Remove(string key)
         {
-            if (database.ContainsKey(key))
+            mutex.WaitOne(); // Adquire o mutex para garantir exclusão mútua.
+
+            try
             {
-                database.Remove(key);
-                SaveData(); // Salva os dados no arquivo.
-                return"removed";
+                if (database.ContainsKey(key))
+                {
+                    database.Remove(key);
+                    SaveData(); // Salva os dados no arquivo.
+                    return "removed";
+                }
+                else
+                {
+                    return "Key not found.";
+                }
             }
-            else
+            finally
             {
-                return"Key not found.";
+                mutex.ReleaseMutex(); // Libera o mutex.
             }
         }
 
         // Método para procurar um valor no banco de dados com base na chave.
         public string Search(string key)
         {
-            if (database.ContainsKey(key))
+            mutex.WaitOne(); // Adquire o mutex para garantir exclusão mútua.
+
+            try
             {
-                return database[key];
+                if (database.ContainsKey(key))
+                {
+                    return database[key];
+                }
+                else
+                {
+                    return "Not Found";
+                }
             }
-            else
+            finally
             {
-                return "Not Found";
+                mutex.ReleaseMutex(); // Libera o mutex.
             }
         }
+
 
         // Método para executar os comandos do client através do servidor
         public string Execute(Command command)
@@ -94,35 +135,54 @@ namespace simpleDb
         }
 
         // Método privado para carregar os dados do arquivo para o dicionário.
-        private void LoadData()
+           private void LoadData()
         {
-            database = new Dictionary<string, string>();
+            mutex.WaitOne(); // Adquire o mutex para garantir exclusão mútua.
 
-            if (File.Exists(dataPath))
+            try
             {
-                string[] lines = File.ReadAllLines(dataPath);
-                foreach (string line in lines)
+                database = new Dictionary<string, string>();
+
+                if (File.Exists(dataPath))
                 {
-                    string[] parts = line.Split(',');
-                    if (parts.Length == 2)
+                    string[] lines = File.ReadAllLines(dataPath);
+                    foreach (string line in lines)
                     {
-                        string key = parts[0];
-                        string value = parts[1];
-                        database[key] = value;
+                        string[] parts = line.Split(',');
+                        if (parts.Length == 2)
+                        {
+                            string key = parts[0];
+                            string value = parts[1];
+                            database[key] = value;
+                        }
                     }
                 }
+            }
+            finally
+            {
+                mutex.ReleaseMutex(); // Libera o mutex.
             }
         }
 
         // Método privado para salvar os dados do dicionário no arquivo.
         private void SaveData()
         {
-            List<string> lines = new List<string>();
-            foreach (var entry in database)
+            
+            mutex.WaitOne(); // Adquire o mutex para garantir exclusão mútua.
+
+            try
             {
-                lines.Add(entry.Key + "," + entry.Value);
+                List<string> lines = new List<string>();
+                foreach (var entry in database)
+                {
+                    lines.Add(entry.Key + "," + entry.Value);
+                }
+                File.WriteAllLines(dataPath, lines);
             }
-            File.WriteAllLines(dataPath, lines);
+            finally
+            {
+                mutex.ReleaseMutex(); // Libera o mutex.
+            }
         }
     }
 }

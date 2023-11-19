@@ -25,7 +25,7 @@ namespace Client
                     case "--insert":
                     command.Op = Operacao.Insert;
                     break;
-                    case "--uptade":
+                    case "--update":
                     command.Op = Operacao.Update;
                     break;
                     case "--remove":

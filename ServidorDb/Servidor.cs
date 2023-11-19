@@ -1,5 +1,6 @@
 ﻿using System;
 using MSMQ.Messaging;
+using System.Threading;
 
 namespace simpleDb
 {
@@ -20,6 +21,7 @@ namespace simpleDb
             ReadLinesArgs(args, Database);
             return;
             }
+            
             Console.WriteLine("Rodando");
             CreateQueue();
 
@@ -29,13 +31,22 @@ namespace simpleDb
 
                         while(true)
                         {
+                            Thread thread = new Thread(() =>
+                            {
+
                             Message msg = messageQueue.Receive();
                             Command msQueue = (Command)msg.Body;
 
                             ClientComunication(Database, msQueue);
 
                             messageQueue.Close();
+
+                            });
+
+                        thread.Start();
+                        
                         }
+
 
             
 
@@ -166,14 +177,6 @@ namespace simpleDb
                                 default:
                                     Console.WriteLine("Invalid command. Try again");
                                     break;
-
-                                    // try { //MUDANCA
-                                    //     string resposta = simpledb.Execute(command);
-                                    //     Console.WriteLine(resposta);
-                                    // }
-                                    // catch (Exception e) {
-                                    //     Console.WriteLine("error: " + e.Message);
-                                    // }
                 }
             }
         }
