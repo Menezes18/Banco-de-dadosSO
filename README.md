@@ -1,6 +1,6 @@
 # Operational Systems
 
-### Introdução
+### Description
 
 Project developed in C#, using VSCode IDE and .NET Runtime Install Tool.
 This project is a creation of a SimpleDB for Operational Systems in PUC Minas.
