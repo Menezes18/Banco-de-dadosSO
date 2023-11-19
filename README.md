@@ -1,15 +1,38 @@
-# Trabalho de banco de dados - SO
+# Operational Systems
 
-Este repositório contém o trabalho prático de banco de dados de chave-valor do grupo: Gustavo Eyer de Menezes, Estevão Werneck, Tiago Alves 
+### (https://placehold.co/15x15/f03c15/f03c15.png) Introdução
 
-## Descrição
+Project developed in C#, using VSCode IDE and .NET Runtime Install Tool.
+This project is a creation of a SimpleDB for Operational Systems in PUC Minas.
 
-O trabalho consiste em implementar um banco de dados relacional simples para um sistema de gerenciamento de estoque. O banco de dados deve suportar as seguintes operações:
+### (https://placehold.co/15x15/f03c15/f03c15.png) Version/Libraries
 
-* Inserção de objetos
-* Remoção de objetos
-* Atualização de objetos
-* Pesquisa de objetos
-* Persistência de objetos em um arquivo
+* dotnet version: 7.0.403
 
+* package MSMQ.Messaging version: 1.0.4
 
+* Need to install MSMQ Server (Microsoft Message Queue) 
+
+### (https://placehold.co/15x15/f03c15/f03c15.png) Usage instructions
+
+> *Compilation: dotnet run command*
+
+* --insert <key, value>
+
+* --remove <value>
+
+* --search <value>
+
+* --update <key, newValue>
+
+* --quit
+
+### (https://placehold.co/15x15/f03c15/f03c15.png) Members
+
+* Tiago Neto
+* Estevão Werneck
+* Gustavo Menezes
+
+### (https://placehold.co/15x15/f03c15/f03c15.png) Professor
+
+* Pedro Henrique Penna
