@@ -1,11 +1,11 @@
 # Operational Systems
 
-### (https://placehold.co/15x15/f03c15/f03c15.png) Introdução
+### Introdução
 
 Project developed in C#, using VSCode IDE and .NET Runtime Install Tool.
 This project is a creation of a SimpleDB for Operational Systems in PUC Minas.
 
-### (https://placehold.co/15x15/f03c15/f03c15.png) Version/Libraries
+### Version/Libraries
 
 * dotnet version: 7.0.403
 
@@ -13,7 +13,7 @@ This project is a creation of a SimpleDB for Operational Systems in PUC Minas.
 
 * Need to install MSMQ Server (Microsoft Message Queue) 
 
-### (https://placehold.co/15x15/f03c15/f03c15.png) Usage instructions
+### Usage instructions
 
 > *Compilation: dotnet run command*
 
@@ -27,12 +27,12 @@ This project is a creation of a SimpleDB for Operational Systems in PUC Minas.
 
 * --quit
 
-### (https://placehold.co/15x15/f03c15/f03c15.png) Members
+### Members
 
 * Tiago Neto
 * Estevão Werneck
 * Gustavo Menezes
 
-### (https://placehold.co/15x15/f03c15/f03c15.png) Professor
+### Professor
 
 * Pedro Henrique Penna
