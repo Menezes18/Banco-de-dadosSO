@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using MSMQ.Messaging;
 using System.Threading;
 
@@ -13,6 +15,9 @@ namespace simpleDb
 
         static void Main(string[] args)
         {
+            
+           
+
             string dataNamePath = "DataBase.db"; // Caminho para salvar o banco de dados
 
             // Instância da classe Simpledb para interagir com o banco de dados
@@ -49,15 +54,17 @@ namespace simpleDb
                 thread.Start(); // Inicia uma nova thread para processar a mensagem
             }
 
-            // Função para excluir a fila
-            DeleteQueue();
+              Console.CancelKeyPress += delegate(object? sender, ConsoleCancelEventArgs e) { 
+                DeleteQueue(); 
+            }; 
+
         }
 
         // Função para lidar com a comunicação do cliente
         static void ClientCommunication(Simpledb simpledb, Command command)
         {
             // Recebe e processa a mensagem
-            Console.WriteLine("LoadResponse...");
+            Console.WriteLine("Load Response...");
             string response = simpledb.Execute(command);
             Message ms = new Message(response);
 
@@ -92,11 +99,11 @@ namespace simpleDb
         // Função para processar os argumentos de linha de comando
         static void ReadLinesArgs(string[] args, Simpledb simpledb)
         {
-            string input = Console.ReadLine();
-            string[] parts = input.Split(' ');
-            string entry = parts[0].ToLower();
+            string entry = args[0].ToLower();
+            string[] parts = args[1].Split(',');
 
             Command command = new Command();
+            command.Key = parts[0];
 
             switch (entry)
             {
@@ -108,17 +115,8 @@ namespace simpleDb
                     }
                     else
                     {
-                        string[] keyValue = parts[1].Split(',');
-                        if (keyValue.Length != 2)
-                        {
-                            Console.WriteLine("Incorrect usage. Use: insert key, value");
-                        }
-                        else
-                        {
-                            string key = keyValue[0];
-                            string value = keyValue[1];
-                            command.Op = Operacao.Insert;
-                        }
+                            command.Value = parts[1];      
+                            command.Op = Operacao.Insert;  
                     }
                     break;
 
@@ -130,17 +128,8 @@ namespace simpleDb
                     }
                     else
                     {
-                        string[] keyValue = parts[1].Split(',');
-                        if (keyValue.Length != 2)
-                        {
-                            Console.WriteLine("Incorrect usage. Use: update key, value");
-                        }
-                        else
-                        {
-                            string key = keyValue[0];
-                            string value = keyValue[1];
+                            command.Value = parts[1];  
                             command.Op = Operacao.Update;
-                        }
                     }
                     break;
 
@@ -152,7 +141,6 @@ namespace simpleDb
                     }
                     else
                     {
-                        string key = parts[1];
                         command.Op = Operacao.Remove;
                     }
                     break;
@@ -165,7 +153,6 @@ namespace simpleDb
                     }
                     else
                     {
-                        string key = parts[1];
                         var result = command.Op = Operacao.Search;
                         if (result != null)
                         {
@@ -182,7 +169,14 @@ namespace simpleDb
                 default:
                     Console.WriteLine("Invalid command. Try again");
                     break;
+
             }
+
+                
+               
+
+                string response = simpledb.Execute(command);
+                Console.WriteLine(response);   
         }
     }
 }

@@ -73,12 +73,12 @@ namespace Client
 
             try
             {
-                Console.WriteLine("Enviando Mensagem");
+                Console.WriteLine("Sending Menssage");
                 // Envia a mensagem para o servidor
                 Message ms = new Message(command);
                 messageQueue.Send(ms);
 
-                Console.WriteLine("Recebendo Mensagem");
+                Console.WriteLine("Receiving Menssage");
                 // Recebe a resposta do servidor
                 Message clientMsg = clientMsPath.Receive();
                 string answer = (string)clientMsg.Body;
