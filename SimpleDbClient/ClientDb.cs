@@ -41,6 +41,9 @@ namespace Client
                 case "--search":
                     command.Op = Operacao.Search;
                     break;
+                case "-cache-size":
+                     command.Op = Operacao.Cache;
+                    break;
                 case "--quit":
                     // Comando para sair do programa
                     Environment.Exit(0);

@@ -9,27 +9,31 @@ namespace simpleDb
     // Classe principal do programa.
     class Program
     {
+        
         // Inicialização da fila de mensagens
-        const string msQueuePath = (".\\Private$\\simpleDbQueue"); // Caminho da fila de mensagens do servidor
-        const string clientMsPath = (".\\Private$\\ClientQueue"); // Caminho da fila de mensagens do cliente
+        const string msQueuePath = @".\Private$\simpleDbQueue"; // Caminho da fila de mensagens do servidor
+        const string clientMsPath = @".\Private$\ClientQueue"; // Caminho da fila de mensagens do cliente
 
         static void Main(string[] args)
         {
-            
-           
+
 
             string dataNamePath = "DataBase.db"; // Caminho para salvar o banco de dados
 
             // Instância da classe Simpledb para interagir com o banco de dados
-            Simpledb Database = new Simpledb(dataNamePath);
+            ICacheStrategy<string, string> cacheStrategy = null;
+            CacheManager<string, string> cacheManager = null;
 
             if (args.Length > 0)
             {
                 // Se há argumentos de linha de comando, processa-os e retorna
-                ReadLinesArgs(args, Database);
+                ReadLinesArgs(args, dataNamePath, ref cacheStrategy, ref cacheManager);
                 return;
             }
 
+            Console.WriteLine("Selecting cache strategy...");
+            cacheStrategy = SelectCacheStrategy();
+            cacheManager = new CacheManager<string, string>(cacheStrategy);
             Console.WriteLine("Running");
             CreateQueue(); // Cria a fila de mensagens
 
@@ -46,7 +50,7 @@ namespace simpleDb
                     Command msQueue = (Command)msg.Body;
 
                     // Função para lidar com a comunicação do cliente
-                    ClientCommunication(Database, msQueue);
+                    ClientCommunication(dataNamePath, cacheStrategy, cacheManager, msQueue);
 
                     messageQueue.Close(); // Fecha a fila após o processamento
                 });
@@ -54,18 +58,39 @@ namespace simpleDb
                 thread.Start(); // Inicia uma nova thread para processar a mensagem
             }
 
-              Console.CancelKeyPress += delegate(object? sender, ConsoleCancelEventArgs e) { 
-                DeleteQueue(); 
-            }; 
+            Console.CancelKeyPress += delegate (object? sender, ConsoleCancelEventArgs e) {
+                DeleteQueue();
+            };
+        }
 
+        static ICacheStrategy<string, string> SelectCacheStrategy()
+        {
+            Console.Write("Select cache strategy (fifo/lru/aging): ");
+            string strategy = Console.ReadLine().ToLower();
+
+            switch (strategy)
+            {
+                case "fifo":
+                    return new SimpleCacheFIFO<string, string>();
+                case "lru":
+                    //return new SimpleCacheLRU<string, string>();
+                case "aging":
+                    //return new SimpleCacheAging<string, string>();
+                default:
+                    Console.WriteLine("Invalid cache strategy. Using FIFO as default.");
+                    return new SimpleCacheFIFO<string, string>();
+            }
         }
 
         // Função para lidar com a comunicação do cliente
-        static void ClientCommunication(Simpledb simpledb, Command command)
+        static void ClientCommunication(string dataNamePath, ICacheStrategy<string, string> cacheStrategy, CacheManager<string, string> cacheManager, Command command)
         {
+            // Instância da classe Simpledb para interagir com o banco de dados
+            Simpledb Database = new Simpledb(dataNamePath, cacheStrategy);
+
             // Recebe e processa a mensagem
             Console.WriteLine("Load Response...");
-            string response = simpledb.Execute(command);
+            string response = Database.Execute(command);
             Message ms = new Message(response);
 
             // Envia a resposta de volta ao cliente
@@ -95,9 +120,8 @@ namespace simpleDb
                 MessageQueue.Delete(msQueuePath);
             }
         }
-
         // Função para processar os argumentos de linha de comando
-        static void ReadLinesArgs(string[] args, Simpledb simpledb)
+        static void ReadLinesArgs(string[] args, string dataNamePath, ref ICacheStrategy<string, string> cacheStrategy, ref CacheManager<string, string> cacheManager)
         {
             string entry = args[0].ToLower();
             string[] parts = args[1].Split(',');
@@ -146,20 +170,36 @@ namespace simpleDb
                     break;
 
                 case "--search":
-                    // Comando para procurar um valor no banco de dados com base na chave.
-                    if (parts.Length != 2)
+                // Comando para procurar um valor no banco de dados com base na chave.
+                if (parts.Length != 2)
+                {
+                    Console.WriteLine("Incorrect usage. Use: search key");
+                }
+                else
+                {
+                    command.Op = Operacao.Search;
+                    var result = command.Op; // Assuming you want to retrieve the operation
+                    if (result != null)
                     {
-                        Console.WriteLine("Incorrect usage. Use: search key");
+                        Console.WriteLine(result);
                     }
-                    else
-                    {
-                        var result = command.Op = Operacao.Search;
-                        if (result != null)
-                        {
-                            Console.WriteLine(result);
-                        }
-                    }
-                    break;
+                }
+                break;
+
+                case "-cache-size":
+                int cacheSize;
+                if (int.TryParse(parts[1], out cacheSize) && cacheSize > 0)
+                {
+                    // Assuming SelectCacheStrategy doesn't take any parameters
+                    cacheStrategy = SelectCacheStrategy();
+                    cacheManager = new CacheManager<string, string>(cacheStrategy);
+                    Console.WriteLine($"Cache size set to: {cacheSize}");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid cache size. Using default size.");
+                }
+                continue;
 
                 case "--quit":
                     // Comando para sair do programa.
