@@ -75,7 +75,7 @@ namespace simpleDb
                 case "lru":
                     return new SimpleCacheLRU<string, string>();
                 case "aging":
-                    //return new SimpleCacheAging<string, string>();
+                    return new SimpleCacheAging<string, string>();
                 default:
                     Console.WriteLine("Invalid cache strategy. Using FIFO as default.");
                     return new SimpleCacheFIFO<string, string>();
