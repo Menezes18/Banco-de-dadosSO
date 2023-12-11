@@ -73,7 +73,7 @@ namespace simpleDb
                 case "fifo":
                     return new SimpleCacheFIFO<string, string>();
                 case "lru":
-                    //return new SimpleCacheLRU<string, string>();
+                    return new SimpleCacheLRU<string, string>();
                 case "aging":
                     //return new SimpleCacheAging<string, string>();
                 default:
